@@ -1,0 +1,22 @@
+pipeline{
+    agent any
+    environment {
+        PATH = "C:/Program Files/Apache maven-3.8.2/bin: $PATH"
+           }
+    stages{
+            
+       stage('Build'){
+            steps{
+                bat 'mvn clean package'
+            }
+         }
+         // Lint with MegaLinter: https://megalinter.github.io/
+       stage('MegaLinter'){
+           steps {
+             bat 'docker pull megalinter/megalinter'
+             bat 'docker run -d -e "FILEIO_REPORTER=true" -v %WORKSPACE%:/tmp/lint megalinter/megalinter'
+            
+        }
+    }
+    }
+    }
